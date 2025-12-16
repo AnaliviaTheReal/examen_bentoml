@@ -1,4 +1,4 @@
 .DS_Store
 .DS_Store?
 /venv
-/clean_data.csv
+/clean_data.csv.venv/
