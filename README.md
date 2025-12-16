@@ -26,3 +26,17 @@ Afin de pouvoir commencer le projet vous devez suivre les étapes suivantes:
 
 
 Bon travail!
+
+
+
+# Examen BentoML — Admissions Prediction
+
+# Prérequis
+- Docker installé 
+- (Optionnel) Python 3.12 + venv si vous voulez lancer les tests hors Docker
+
+# Lancer ces commandes dans l'ordre
+```bash
+docker load -i valery_analivia_admissions_service.tar
+docker images | grep analivia_admissions_service
+docker run --rm -p 3000:3000 analivia_admissions_service:latest
