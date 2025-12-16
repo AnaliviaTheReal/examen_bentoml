@@ -1,0 +1,12 @@
+service: "src.service:AdmissionsService"
+labels:
+  owner: "Analivia"
+  project: "Admissions Prediction"
+include:
+  - "src/*.py"
+  - "README.md"
+  - "requirements.txt"
+python:
+  requirements_txt: "requirements.txt"
+models:
+  - "admissions_lr:le2t6ww2qsz6scsl"
