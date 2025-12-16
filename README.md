@@ -1,9 +1,5 @@
 # Examen BentoML
 
-Ce repertoire contient l'architecture basique afin de rendre l'évaluation pour l'examen BentoML.
-
-Vous êtes libres d'ajouter d'autres dossiers ou fichiers si vous jugez utile de le faire.
-
 Voici comment est construit le dossier de rendu de l'examen:
 
 ```bash       
@@ -16,27 +12,95 @@ Voici comment est construit le dossier de rendu de l'examen:
 │   └── README.md
 ```
 
-Afin de pouvoir commencer le projet vous devez suivre les étapes suivantes:
+# Projet BentoML -- Prédiction d'admission universitaire
 
-- Forker le projet sur votre compte github
+Auteur : Analivia Valery
 
-- Cloner le projet sur votre machine
+Cette API BentoML permet de prédire la probabilité d'admission d'un
+étudiant à partir de variables académiques. Ce document décrit les
+commandes nécessaires pour lancer l'API conteneurisée et exécuter les
+tests unitaires.
 
-- Récuperer le jeu de données à partir du lien suivant: [Lien de téléchargement]( https://datascientest.s3-eu-west-1.amazonaws.com/examen_bentoml/admissions.csv)
+------------------------------------------------------------------------
 
+# Contenu de l’archive
 
-Bon travail!
+- `valery_analivia_admissions_service.tar` : image Docker de l’API BentoML
+- `src/service.py` : service BentoML
+- `tests/test_api.py` : tests unitaires pytest
+- `bentofile.yaml`, `requirements.txt` : configuration BentoML
+- `README.md` : ce fichier
 
+# 1. Lancement de l'API conteneurisée
 
+## 1.1. Charger l'image Docker fournie
 
-# Examen BentoML — Admissions Prediction
+Le fichier valery_analivia_admissions_service.tar doit être présent à la
+racine du projet.
 
-# Prérequis
-- Docker installé 
-- (Optionnel) Python 3.12 + venv si vous voulez lancer les tests hors Docker
+Commande :
 
-# Lancer ces commandes dans l'ordre
-```bash
 docker load -i valery_analivia_admissions_service.tar
+
+Vérifier que l'image est présente :
+
 docker images | grep analivia_admissions_service
+
+------------------------------------------------------------------------
+
+## 1.2. Lancer l'API
+
 docker run --rm -p 3000:3000 analivia_admissions_service:latest
+
+L'API est alors disponible sur :
+
+http://localhost:3000
+
+------------------------------------------------------------------------
+
+# 2. Utilisation de l'API
+
+## 2.1. Endpoint /login (POST)
+
+Permet de récupérer un token JWT.
+
+Commande :
+
+curl -X POST http://localhost:3000/login \
+  -H "Content-Type: application/json" \
+  -d '{"payload":{"username":"admin","password":"admin123"}}'
+
+Exemple de réponse :
+
+{ "token": "xxxxx.yyyyy.zzzzz" }
+
+------------------------------------------------------------------------
+
+## 2.2. Endpoint /predict (POST)
+
+Requiert un token JWT valide.
+
+Commande :
+
+curl -X POST http://localhost:3000/predict \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN_JWT>" \
+  -d '{"payload":{"GRE Score":320,"TOEFL Score":110,"University Rating":4,"SOP":4.5,"LOR":4.0,"CGPA":9.2,"Research":1}}'
+
+Exemple de réponse :
+
+{ "user": "user123", "prediction": 0.76 }
+
+------------------------------------------------------------------------
+
+# 3. Exécution des tests unitaires
+
+L'API doit être lancée via Docker AVANT d'exécuter les tests.
+
+Commande :
+
+pytest tests/test_api.py -v
+
+Résultat attendu :
+
+passed
