@@ -1,5 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
 .DS_Store
-.DS_Store?
-/venv
-/clean_data.csv.venv/
+
+# data
 data/processed/
